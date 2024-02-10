@@ -1,13 +1,15 @@
-import { Logger } from './logger';
+import type { IApiConfig, ILogger, User, IHTTP } from '../types';
 
-import type { ApiConfig } from '../types';
-export class HTTP {
-  logger: Logger;
-  apiConfig: ApiConfig;
+// Service A
+export class HTTP implements IHTTP {
+  logger: ILogger;
+  apiConfig: IApiConfig;
 
-  constructor(apiConfig: ApiConfig) {
+  static $inject = ['logger', 'apiConfig'];
+
+  constructor(logger: ILogger, apiConfig: IApiConfig) {
     this.apiConfig = apiConfig;
-    this.logger = new Logger();
+    this.logger = logger;
   }
 
   async get(url: string) {
@@ -15,11 +17,11 @@ export class HTTP {
 
     if (response.ok) {
       const responseData = await response.json();
-      this.logger.info(`Status: ${response.status}. Response: ${JSON.stringify(responseData)}`);
+      this.logger.log('info', `Status: ${response.status}. Response: ${JSON.stringify(responseData)}`)
 
       return responseData;
     } else {
-      this.logger.error(`Status: ${response.status}. Status Text: ${response.statusText}`);
+      this.logger.log('error', `Status: ${response.status}. Status Text: ${response.statusText}`);
     }
   }
 }
