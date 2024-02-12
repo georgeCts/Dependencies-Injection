@@ -1,13 +1,11 @@
-export class Logger {
-  info(message: string) {
+import { ILogger } from "../types";
+
+// Service B
+export class Logger implements ILogger {
+  static $singleton = true;
+
+  log(type: "info" | "error", message:string) {
     const date = new Date().toISOString();
-
-    console.log('[INFO]', `[${date}]`, message);
-  }
-
-  error(message: string) {
-    const date = new Date().toISOString();
-
-    console.error('[ERROR]', `[${date}]`, message);
+    console[type](`[${type.toUpperCase()}]`, `[${date}]`, message);
   }
 }
